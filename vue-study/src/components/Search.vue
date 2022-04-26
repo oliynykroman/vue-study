@@ -1,6 +1,6 @@
 <template>
   <section class="search">
-    <div class="form-group">
+    <!-- <form class="form-group">
       <label class="search-input-container">
         <span class="title">Enter name:</span>
         <div class="input--wrap">
@@ -8,6 +8,7 @@
             type="text"
             placeholder="Search users..."
             class="form-control"
+            v-model="search"
           />
           <button class="searchbutton">search</button>
         </div>
@@ -25,10 +26,18 @@
             <option value="1">sort.name</option>
           </select>
         </label>
+       
       </div>
-    </div>
-
-    <section hidden>
+    </form> -->
+        <ul v-if="posts && posts.length">
+          <li v-for="post of posts">
+            <p>
+              <strong>{{ post.title }}</strong>
+            </p>
+            <p>{{ post.body }}</p>
+          </li>
+        </ul>
+    <!-- <section hidden>
       <div class="user_not-found">
         user with name <strong>input.value </strong> has no found :(
       </div>
@@ -73,21 +82,35 @@
         </ul>
         <div class="pagination"></div>
       </div>
-    </section>
+    </section> -->
   </section>
 </template>
 <script>
 import axios from "axios";
+
 export default {
   name: "SearchComponent",
   data: () => {
-    users: [];
-    errors: [];
+    return {
+      users: [],
+      errors: [],
+      posts: [],
+    };
   },
+  created() {
+    axios
+      .get(`http://jsonplaceholder.typicode.com/posts`)
+      .then((response) => {
+        // JSON responses are automatically parsed.
+        this.posts = response.data;
+      })
+      .catch((e) => {
+        this.errors.push(e);
+      });
+  },
+
   methods: {
-    getUserData(user) {
-    
-    },
+    getUserData(user) {},
   },
 };
 </script>

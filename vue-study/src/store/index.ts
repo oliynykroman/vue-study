@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import Axios from 'axios';
 
 Vue.use(Vuex);
 
@@ -14,10 +15,23 @@ export default new Vuex.Store({
     },
     USERDATA: state => {
       return state.userData;
+    }
+  },
+  mutations: {
+    SET_USERS: (state, payload) => {
+      state.users = payload;
     },
-    mutations: {
-      
+    SET_USERDATA: (state, payload) => {
+      state.userData = payload;
+    }
+  },
+  actions: {
+    SET_USERS: (context, payload) => {
+      context.commit('SET_USERS', payload);
     },
-    actions: {},
-    modules: {},
-  });
+    SET_USERDATA: (context, payload) => {
+      context.commit('SET_USERDATA', payload);
+    },
+  },
+  modules: {},
+});
