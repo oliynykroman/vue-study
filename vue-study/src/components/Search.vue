@@ -1,6 +1,6 @@
 <template>
   <section class="search">
-    <!-- <form class="form-group">
+    <form class="form-group">
       <label class="search-input-container">
         <span class="title">Enter name:</span>
         <div class="input--wrap">
@@ -8,9 +8,11 @@
             type="text"
             placeholder="Search users..."
             class="form-control"
-            v-model="search"
+            v-model="user"
           />
-          <button class="searchbutton">search</button>
+          <button class="searchbutton" v-bind:click="getUserData(user)">
+            search
+          </button>
         </div>
       </label>
       <div class="filter-block">
@@ -26,23 +28,20 @@
             <option value="1">sort.name</option>
           </select>
         </label>
-       
       </div>
-    </form> -->
-        <ul v-if="posts && posts.length">
-          <li v-for="post of posts">
-            <p>
-              <strong>{{ post.title }}</strong>
-            </p>
-            <p>{{ post.body }}</p>
-          </li>
-        </ul>
-    <!-- <section hidden>
-      <div class="user_not-found">
-        user with name <strong>input.value </strong> has no found :(
+    </form>
+
+    <section>
+      <div class="user_not-found" v-if="!!uesrs">
+        user with name <strong>{{user}}</strong> has no found :(
       </div>
 
-      <div class="error">Ooops Eror: error</div>
+      <div class="error" v-if="!errors">
+        Ooops Eror:
+        <span v-for="(error, index) in errors" v-bind:key="index">
+          error.message
+        </span>
+      </div>
 
       <div class="find-first-user">
         <span class="greeting">YOooo meeeN!</span>
@@ -55,54 +54,40 @@
         <div class="search-result--total">
           Total found <strong>10</strong> users
         </div>
-        <ul class="search-result--list">
-          <li class="search-result--item">
-            <div class="user-big-avatar"></div>
-            <div class="avatar">
-              <img src="" alt="item.name" />
-            </div>
-            <div class="user-name">item.name</div>
-            <div class="user-location">item.location</div>
-            <div class="user-data">item.company</div>
-            <div class="user-data">item.email</div>
-            <div class="user-data">item.company</div>
-            <div class="divider"></div>
-            <div class="user-item--footer">
-              <div class="item followers-count">
-                <span>Followers:</span>
-                <span>item.followers</span>
-              </div>
-              <div class="item show-repos">
-                <button role="button" type="submit" class="repo-link">
-                  User repos
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
         <div class="pagination"></div>
       </div>
-    </section> -->
+    </section>
+    <!-- <ul class="search-result--list">
+      <li
+        class="search-result--item"
+        v-for="user in users"
+        v-bind:key="user.id"
+      >
+        <user v-bind:user="user" v-bind:id="user.id"></user>
+      </li>
+    </ul> -->
   </section>
 </template>
 <script>
 import axios from "axios";
+import user from "./User.vue";
 
 export default {
   name: "SearchComponent",
+  components: { user },
   data: () => {
     return {
       users: [],
       errors: [],
-      posts: [],
+      user: "",
     };
   },
   created() {
     axios
-      .get(`http://jsonplaceholder.typicode.com/posts`)
+      .get(`https://api.github.com/users?q=${user}`)
       .then((response) => {
-        // JSON responses are automatically parsed.
-        this.posts = response.data;
+        console.log(response.data);
+        this.users = response.data;
       })
       .catch((e) => {
         this.errors.push(e);
@@ -110,7 +95,13 @@ export default {
   },
 
   methods: {
-    getUserData(user) {},
+    search() {
+      return "test";
+    },
+
+    getUserData(user) {
+      console.log(user);
+    },
   },
 };
 </script>
